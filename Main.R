@@ -49,7 +49,7 @@ execute <- function(jobContext) {
 	  outputFolder           = workFolder,
 	  #cdmVersion             = jobContext$moduleExecutionSettings$cdmVersion, #TODO: Revise this based on what is in cdm_source table
 	  overwriteAchilles      = jobContext$settings$overwriteAchilles,
-	  minCellCount           = jobContext$settings$minCellCount,
+	  minCellCount           = jobContext$moduleExecutionSettings$minCellCount,
 	  tableCheckThresholds   = jobContext$settings$tableCheckThresholds,
 	  fieldCheckThresholds   = jobContext$settings$fieldCheckThresholds,
 	  conceptCheckThresholds = jobContext$settings$conceptCheckThresholds,

@@ -15,7 +15,6 @@ getModuleInfo <- function() {
 # TODO: Re-enable table/field/concept checks later
 dbProfileModuleSpecifications <- createDbProfileModuleSpecifications(
   overwriteAchilles = TRUE,
-  minCellCount = 0,
   addDQD = TRUE,
   tableCheckThresholds = "default",
   fieldCheckThresholds = "default",

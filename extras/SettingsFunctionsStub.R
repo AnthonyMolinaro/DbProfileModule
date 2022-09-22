@@ -18,8 +18,6 @@
 #'
 #' @param overwriteAchilles Specify if existing achilles results tables should be overwritten, Default=FALSE
 #'                    
-#' @param minCellCount Minimum cell count to allow in analyses. Default = 0
-#' 
 #' @param addDQD Specify if DQD should be run. Default = TRUE
 #' 
 #' @param tableCheckThresholds OPTIONAL Location of the custom threshold file for the DQD table checks. In absence of this parameter the default thresholds are used.
@@ -34,7 +32,6 @@
 #'
 #' @export
 createDbProfileModuleSpecifications <- function(overwriteAchilles = FALSE,
-                                                minCellCount = 0,
                                                 addDQD = TRUE,
                                                 tableCheckThresholds = "default",
                                                 fieldCheckThresholds = "default",
