@@ -37,9 +37,11 @@ execute <- function(jobContext) {
 	}
 	
 	resultsFolder <- jobContext$moduleExecutionSettings$resultsSubFolder
-  workFolder <- jobContext$moduleExecutionSettings$workSubFolder
-  databaseId <- as.character(jobContext$moduleExecutionSettings$databaseId)
+	workFolder <- jobContext$moduleExecutionSettings$workSubFolder
+	databaseId <- as.character(jobContext$moduleExecutionSettings$databaseId)
   
+	cdmVersion <- getCdmVersion(jobContext$moduleExecutionSettings$connectionDetails)
+	
 	DbDiagnostics::executeDbProfile(
 	  connectionDetails      = jobContext$moduleExecutionSettings$connectionDetails,
 	  cdmDatabaseSchema      = jobContext$moduleExecutionSettings$cdmDatabaseSchema,
@@ -47,7 +49,7 @@ execute <- function(jobContext) {
 	  vocabDatabaseSchema    = jobContext$moduleExecutionSettings$cdmDatabaseSchema,
 	  cdmSourceName          = databaseId,
 	  outputFolder           = workFolder,
-	  #cdmVersion             = jobContext$moduleExecutionSettings$cdmVersion, #TODO: Revise this based on what is in cdm_source table
+	  cdmVersion             = cdmVersion,
 	  overwriteAchilles      = jobContext$settings$overwriteAchilles,
 	  minCellCount           = jobContext$moduleExecutionSettings$minCellCount,
 	  tableCheckThresholds   = jobContext$settings$tableCheckThresholds,
@@ -151,3 +153,16 @@ formatDQDResults <- function(
 	CohortGenerator::writeCsv(x = dpMetadata,
 	                          file = file.path(resultsFolder, "dp_metadata.csv"))
 }
+
+# Get the CDM Version in the proper format
+getCdmVersion <- function(connectionDetails, cdmDatabaseSchema) {
+	
+	sql <- "select right(left(cdm_version,4),3) as cdm_version from @cdmDatabaseSchema.cdm_source;"
+	sql <- SqlRender::render(sql, cdmDatabaseSchema = cdmDatabaseSchema)
+	sql <- SqlRender::translate(sql, targetDialect = connectionDetails$dbms)
+	conn <- DatabaseConnector::connect(connectionDetails) 
+	cdmVersion <- DatabaseConnector::querySql(conn,sql)$CDM_VERSION
+	DatabaseConnector::disconnect(conn)
+	return (cdmVersion)
+}
+
